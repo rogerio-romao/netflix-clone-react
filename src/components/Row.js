@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useCallback, memo } from 'react'
 import YouTube from 'react-youtube'
 import movieTrailer from 'movie-trailer'
 
@@ -24,13 +24,14 @@ const Row = ({ title, fetchUrl, isLargeRow }) => {
     }
   }
 
+  const fetchData = useCallback(async () => {
+    const request = await axios.get(fetchUrl)
+    setMovies(request.data.results)
+  }, [])
+
   useEffect(() => {
-    async function fetchData() {
-      const request = await axios.get(fetchUrl)
-      setMovies(request.data.results)
-    }
     fetchData()
-  }, [fetchUrl])
+  }, [])
 
   const opts = {
     height: '390',
@@ -62,4 +63,4 @@ const Row = ({ title, fetchUrl, isLargeRow }) => {
   )
 }
 
-export default Row
+export default memo(Row)
